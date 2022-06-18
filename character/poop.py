@@ -19,7 +19,7 @@ class Poop:
         
     def draw(self):
         
-        pyxel.blt(self.x, self.y, 
+        pyxel.blt(self.x, self.y + self.h, 
                   self.img_num, self.img_x, self.img_y, 
                   self.w, self.h)
         

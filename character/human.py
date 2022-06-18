@@ -8,7 +8,7 @@ class Human:
     ROOT = FILE.parents[1]  # root directory
     
     MOVE_DIST = 2
-    FULL_LIFE = 5
+    FULL_LIFE = 3
     
     def __init__(self, x, y):
         # 기본 이미지 설정
@@ -23,14 +23,12 @@ class Human:
         
         # 게임 내 설정
         # 목숨
-        self.life_count = 5
-        
-        
-        
+        self.life_count = 3
+        self.max_life = 5
         
         
     def draw(self):
-        pyxel.blt(self.x, self.y, 
+        pyxel.blt(self.x, self.y + self.h, 
                   self.img_num, self.img_x, self.img_y, 
                   self.w, self.h)
         
@@ -41,14 +39,14 @@ class Human:
         x = 256*4
         for i in range(self.life_count):
             x += 32
-            pyxel.blt(x, 520, 
+            pyxel.blt(x, 520 +  self.h, 
                   1, 64, 0, 
                   self.w, self.h)
         
         # Empty heart
         for i in range(Human.FULL_LIFE-self.life_count):
             x += 32
-            pyxel.blt(x, 520, 
+            pyxel.blt(x, 520 + self.h, 
                   1, 96, 0, 
                   self.w, self.h)
         

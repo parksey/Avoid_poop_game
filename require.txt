@@ -1,0 +1,78 @@
+https://github.com/kitao/pyxel/blob/main/README.md#install-standalone-version 
+이 링크 최대한 참조
+대략적 개요 
+
+Python 에서 pyxel import 해서 게임 만들기
+1. 똥피하기 게임, 매 2초마다 캐릭터 있던자리에 똥 한개씩 설치, 
+1-1. 똥을 관통해서 지나갈수 없고 
+1-2. 똥에 닿으면 life count 1개 줄고. 
+
+2. 100초 마다 능력을 사용
+2-1. 스페이스 바를 누르면 능력 사용
+2-2. 맵에 있는 똥 삭제 후 점수 증가 (전체 or 한개)
+
+3. 능력이 충전되는 바 가 있어야함
+3.1 마우스로 충전이 완료된 바 를 누르면 능력 사용 가능
+
+4. 3가지의 랜덤 특수 아이템(30초 마다 랜덤한 장소에 생성)
+4-1. Life count 1 증가
+4-2. 특정 시간동안 무적+똥에 닿으면 똥 삭제
+4-3. 투명(무적)
+
+5. 방해물
+5-1. 랜덤하게 등장하는 새
+5-2. 랜덤한 방향으로 맵을 지나감
+5-3. 처음엔 천천히 지나가지만 점점 빨리 지나가도록
+5-4. 새와 캐릭터가 부딛히면 life count 1 감소
+
+
+Start
+Display the message “Press “Enter” to start the game”
+After “Enter” is pressed, receive input value “name”, display “What is your name?”
+When “Enter” is pressed, start the game
+Character
+Automatically generates obstacle on its current location every 2 seconds(default)
+When “W” is pressed, move upward
+When “S” is pressed, move downward
+When ”A” is pressed, move left
+When “D” is pressed, move right
+Random obstacle
+Random obstacles with a constant speed at random timing
+Random obstacle disappears after it comes out
+As time flows, the speed of the random obstacles will become faster.
+Ability
+Every 100 seconds, the ability can be used by pressing “Space Bar”
+When “Space Bar” is pressed, remove all obstacles on the map
+Score
+Increase by 100 every 2 seconds
+When the ability is used, remove all obstacles on the map and increase the score by 5000 
+Score is accumulated on the upper left corner
+LIfe count
+3 lives(default)
+Whenever the character contacted with the obstacles, deduct life by 1
+
+
+
+Random Item
+Item is generated on the random area every 30 seconds
+3 types of item
+Item that heals the character’s life by 1: If Character has already maximum amount of life, pass
+Item that gives the character ability of erasing the obstacles
+item that allows the character to become invisible in order to avoid obstacles.
+Game Over
+When life count is 0, display “Game Over”, and display “(name) scored (score)!!”
+Move back to the Start function
+
+
+필수로 들어가야하는것
+Use random numbers 
+Use lists 
+Use multiple class definitions 
+Use a method with arguments other than self 
+Use key input
+Use mouse cursor coordinates
+There are 3 or more types of figures that move according to different rules. 
+
+
+https://github.com/kenjifushida/python-dev/blob/main/w6_object/b_12_4.py 
+예시 python pyxel game

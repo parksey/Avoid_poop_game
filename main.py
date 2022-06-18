@@ -55,6 +55,42 @@ class App:
         # map
         pyxel.image(2).load(0,0,f"{self.root}\\assets\\map.png")
         
+        # 시작 화면
+        self.user_name=[]
+        
+        self.is_press_enter = False
+        self.is_start= False
+        self.is_game_over = False
+        
+        self.alphabet_dict ={
+            "a": [0,0],
+            "b": [0,1],
+            "c": [0,2],
+            "d": [0,3],
+            "e": [0,4],
+            "f": [0,5],
+            "g": [0,6],
+            "h": [0,7],
+            "i": [0,8],
+            "j": [0,9],
+            "k": [0,10],
+            "l": [0,11],
+            "m": [0,12],
+            "n": [1,0],
+            "o": [1,1],
+            "p": [1,2],
+            "q": [1,3],
+            "r": [1,4],
+            "s": [1,5],
+            "t": [1,6],
+            "u": [1,7],
+            "v": [1,8],
+            "w": [1,9],
+            "x": [1,10],
+            "y": [1,11],
+            "z": [1,12],
+        }
+        
         # max height
         self.max_height = App.HEIGHT - 128
         
@@ -91,8 +127,14 @@ class App:
 
     def update(self):
         # 종료 조건
-        if pyxel.btn(pyxel.KEY_ESCAPE) or self.human.life_count == 0:
+        if pyxel.btn(pyxel.KEY_ESCAPE):
             pyxel.quit()
+            
+        if self.human.life_count == 0:
+            self.is_game_over = True
+        
+        if not self.is_start or self.is_game_over:
+            return
         
         now = time.time()
         self.move_player()
@@ -329,7 +371,201 @@ class App:
                     16, 32)
             x += 16
         
-  
+    def show_press_menu(self):
+        # “Press “Enter” to start the game”
+        start_x = 400
+        start_y = 300
+               
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["p"][1] * 16, 96 + self.alphabet_dict["p"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["n"][1] * 16, 96 + self.alphabet_dict["n"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["o"][1] * 16, 96 + self.alphabet_dict["o"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["a"][1] * 16, 96 + self.alphabet_dict["a"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["h"][1] * 16, 96 + self.alphabet_dict["h"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["g"][1] * 16, 96 + self.alphabet_dict["g"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["a"][1] * 16, 96 + self.alphabet_dict["a"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["m"][1] * 16, 96 + self.alphabet_dict["m"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        
+        if pyxel.btn(pyxel.KEY_RETURN):
+            self.is_press_enter = True
+            time.sleep(0.1)
+        
+    def get_user_name(self):
+        start_x = 400
+        start_y = 300
+               
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["w"][1] * 16, 96 + self.alphabet_dict["w"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["h"][1] * 16, 96 + self.alphabet_dict["h"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["a"][1] * 16, 96 + self.alphabet_dict["a"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["i"][1] * 16, 96 + self.alphabet_dict["i"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["y"][1] * 16, 96 + self.alphabet_dict["y"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["o"][1] * 16, 96 + self.alphabet_dict["o"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["u"][1] * 16, 96 + self.alphabet_dict["u"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["n"][1] * 16, 96 + self.alphabet_dict["n"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["a"][1] * 16, 96 + self.alphabet_dict["a"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["m"][1] * 16, 96 + self.alphabet_dict["m"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=48
+        
+        
+            
+        for key in self.alphabet_dict:
+            if pyxel.btn(ord(key)):
+                self.user_name.append(key)
+                time.sleep(0.18)
+                break
+            if pyxel.btn(pyxel.KEY_SPACE):
+                self.user_name.append(" ")
+                time.sleep(0.18)
+                break
+                
+        for c in self.user_name:
+            if c == " ":
+                start_x+=16
+            else:
+                pyxel.blt(start_x, start_y, 1, self.alphabet_dict[c][1] * 16, 96 + self.alphabet_dict[c][0] * 16, 16, 16)
+            start_x+=16
+            
+            
+        if pyxel.btn(pyxel.KEY_RETURN):
+            self.is_start = True
+          
+    def end_game(self):
+        start_x = 400
+        start_y = 300
+        
+        # Game Over
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["g"][1] * 16, 96 + self.alphabet_dict["g"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["a"][1] * 16, 96 + self.alphabet_dict["a"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["m"][1] * 16, 96 + self.alphabet_dict["m"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=32
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["o"][1] * 16, 96 + self.alphabet_dict["o"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["v"][1] * 16, 96 + self.alphabet_dict["v"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        
+        # name scored (score)
+        start_x = 350
+        start_y = 400
+        for c in self.user_name:
+            if c == " ":
+                start_x+=16
+            else:
+                pyxel.blt(start_x, start_y, 1, self.alphabet_dict[c][1] * 16, 96 + self.alphabet_dict[c][0] * 16, 16, 16)
+            start_x+=16
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["c"][1] * 16, 96 + self.alphabet_dict["c"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["o"][1] * 16, 96 + self.alphabet_dict["o"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["d"][1] * 16, 96 + self.alphabet_dict["d"][0] * 16, 16, 16)
+        start_x+=48
+        
+        # Number
+        num_string = str(self.total_score)
+        for num in num_string:
+            pyxel.blt(start_x, start_y, 1, 16 * int(num), 64, 16, 32)
+            start_x += 16
+        
+        start_x = 400
+        start_y = 500    
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["p"][1] * 16, 96 + self.alphabet_dict["p"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["s"][1] * 16, 96 + self.alphabet_dict["s"][0] * 16, 16, 16)
+        start_x+=32
+        
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["n"][1] * 16, 96 + self.alphabet_dict["n"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["t"][1] * 16, 96 + self.alphabet_dict["t"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["e"][1] * 16, 96 + self.alphabet_dict["e"][0] * 16, 16, 16)
+        start_x+=16
+        pyxel.blt(start_x, start_y, 1, self.alphabet_dict["r"][1] * 16, 96 + self.alphabet_dict["r"][0] * 16, 16, 16)
+        start_x+=16
+        
+        if pyxel.btn(pyxel.KEY_RETURN):
+            self.is_game_over = False
+            self.is_start = False
+            self.is_press_enter = False
+            self.user_name.clear()
+            time.sleep(0.1)
+    
     def draw(self):
         pyxel.cls(0)
          # level 0
@@ -348,32 +584,39 @@ class App:
             pyxel.blt(256*i, 512 +  App.BOX_Y, 
                   2, 0, 128, 
                   256, 128)
-        
-        # level 1
-        # life
-        self.human.life_draw()
-    
-        # level 1
-        # gauge
-        self.ability_bar_draw()
            
-        # level 1
-        # draw item
-        if self.is_ghost:
-            Item.draw_status(256*3 + 40, 520, "ghost")
-        if self.is_undying:
-            Item.draw_status(256*3 + 72, 520, "undying")
+        if not self.is_press_enter:
+            self.show_press_menu()
+        elif not self.is_start: 
+            self.get_user_name()
+        elif self.is_game_over:
+            self.end_game()
+        else:
+            # level 1
+            # life
+            self.human.life_draw()
         
-        # level1
-        # Draw poop
-        for p in self.poop_list:
-            p.draw()
-        self.human.draw()
-           
-        # level2
-        # Draw item
-        for item in self.item_list:
-             item.draw()
+            # level 1
+            # gauge
+            self.ability_bar_draw()
+            
+            # level 1
+            # draw item
+            if self.is_ghost:
+                Item.draw_status(256*3 + 40, 520, "ghost")
+            if self.is_undying:
+                Item.draw_status(256*3 + 72, 520, "undying")
+            
+            # level1
+            # Draw poop
+            for p in self.poop_list:
+                p.draw()
+            self.human.draw()
+            
+            # level2
+            # Draw item
+            for item in self.item_list:
+                item.draw()
         
         
         

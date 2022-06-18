@@ -12,6 +12,9 @@ Use PyxelEditor
 
 ## **Condition**
 Python 에서 pyxel import 해서 게임 만들기
+0. **시작화면 설정**
+   - [x] “Press “Enter” to start the game” 메세지 보여주기
+   - [x] “What is your name?” 후 이름 받아오기
 1. **초기 설정 및 캐릭터, 똥, life 등 생성과 움직임 제어**
    - [x] 똥피하기 게임, 매 2초마다 캐릭터 있던자리에 똥 한개씩 설치, 
    - [x] 똥을 관통해서 지나갈수 없다. 
@@ -36,3 +39,8 @@ Python 에서 pyxel import 해서 게임 만들기
    - [ ] 랜덤한 방향으로 맵을 지나감
    - [ ] 처음엔 천천히 지나가지만 점점 빨리 지나가도록
    - [ ] 새와 캐릭터가 부딛히면 life count 1 감소
+
+6. **게임종료**
+   - [x] “Game Over”, and display “(name) scored (score)!!”
+   - [x] 게임 종료 시 다시 초기 화면으로 back
+

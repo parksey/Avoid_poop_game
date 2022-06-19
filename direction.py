@@ -1,8 +1,8 @@
 import enum
 
 class Direction(enum.Enum):
-    UP    = 0
+    UP    = 2
     RIGHT = 1
-    DOWN  = 2
-    LEFT  = 3
+    DOWN  = 3
+    LEFT  = 0
     

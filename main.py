@@ -7,6 +7,7 @@ import enum
 from character.poop import Poop
 from character.human import Human
 from item import Item
+from bird import Bird
 from direction import Direction
 
 class App:
@@ -22,8 +23,8 @@ class App:
     POOP_TIME = 2
     COOL_TIME = 0.5
     SB_AB_TIME = 20 # 100초지만 20초마다 확인
-    ITEM_TIME = 30
-    INTERRUPT_TIME = 15
+    ITEM_TIME = 5
+    BIRD_TIME = 5
     
     UNDYING_TIME = 10 # 불사 : 10초
     GHOST_TIME = 10 # 투명 : 10초
@@ -102,6 +103,7 @@ class App:
         self.is_ab_time = False
         self.is_cool_time = False 
         self.is_item_time = False
+        self.is_bird_time = False
         
         # 능력 게이지
         self.sb_gauge = 0
@@ -113,14 +115,86 @@ class App:
         # use item
         self.is_ghost = False
         self.ghost_start_time = 0
+        self.ghost_dt = 0
         
         self.is_undying = False
         self.undying_start_time = 0
+        self.undying_dt = 0
         
         # Score
         self.total_score = 0
         
+        # obstacle : bird
+        # 한 번에 나타나는 새 마리 수
+        self.bird_level = 0
+        self.bird_num = [1, 1, 2, 4, 4]
+        self.bird_speed = [5, 10, 20, 40, 5]
+        
+        self.bird_list = []
+        
+        # 새 끝나는 범위 허용 오차
+        self.bird_tolerance = 10
+        
+        # bird dt
+        self.bird_last_time = time.time()
+        self.bird_dt = 0
+        self.bird_move_list= []
+        
         pyxel.run(self.update, self.draw)
+
+    def game_init(self):
+        # 객체 생성
+        self.poop_list.clear()
+        self.poop_cool_list.clear()
+        
+        rand_x, rand_y = self.get_rand_pos()
+        self.human = Human(rand_x, rand_y)
+        
+        # 시작 화면
+        self.user_name.clear()
+        
+        self.is_press_enter = False
+        self.is_start= False
+        self.is_game_over = False
+        
+        # 시작 타임
+        self.start_time = time.time()
+        
+        # For once draw
+        self.is_two_time = False
+        self.is_ab_time = False
+        self.is_cool_time = False 
+        self.is_item_time = False
+        self.is_bird_time = False
+        
+        # 능력 게이지
+        self.sb_gauge = 0
+        self.AB_FULL_GAUGE = 5 # 0~5  : 0, 20, 40, 60, 80, 100
+
+        # Item list
+        self.item_list.clear()
+
+        # use item
+        self.is_ghost = False
+        self.ghost_start_time = 0
+        self.ghost_dt = 0
+        
+        self.is_undying = False
+        self.undying_start_time = 0
+        self.undying_dt = 0
+        
+        # Score
+        self.total_score = 0
+        
+        # obstacle : bird
+        # 한 번에 나타나는 새 마리 수
+        self.bird_level = 0
+        self.bird_list.clear()
+        
+        # bird dt
+        self.bird_last_time = time.time()
+        self.bird_dt = 0
+        self.bird_move_list.clear()
 
     def get_rand_pos(self):
         return pyxel.rndi(0, 39) * App.BOX_X, pyxel.rndi(0, 15) * App.BOX_Y
@@ -137,25 +211,58 @@ class App:
             return
         
         now = time.time()
+    
         self.move_player()
+        
+        self.bird_dt = now - self.bird_last_time
+        self.bird_last_time = now
+        for i in range(len(self.bird_move_list)):
+            self.bird_move_list[i] += self.bird_dt
+
+        i = 0 
+        while i < len(self.bird_list):  
+        # for i in range(len(self.bird_list)): 
+            if self.bird_move_list[i] > 1 / self.bird_list[i].speed:
+                if self.bird_list[i].level == 4:
+                    self.bird_list[i].special_move(self.human.x, self.human.y)
+                else:
+                    x = self.bird_list[i].x 
+                    y = self.bird_list[i].y
+                    if self.bird_list[i].rand_direction == Direction.UP.value:
+                        y -= Bird.MOVE_DIST
+                    elif self.bird_list[i].rand_direction == Direction.DOWN.value:
+                        y += Bird.MOVE_DIST
+                    elif self.bird_list[i].rand_direction == Direction.RIGHT.value:
+                        x += Bird.MOVE_DIST
+                    elif self.bird_list[i].rand_direction == Direction.LEFT.value:
+                        x -= Bird.MOVE_DIST
+                        
+                    self.bird_list[i].x = x
+                    self.bird_list[i].y = y
+                # 삭제
+                if (self.bird_list[i].x > App.WIDHT +self.bird_tolerance or self.bird_list[i].x < -self.bird_tolerance) or\
+                    (self.bird_list[i].y > 480 + self.bird_tolerance or self.bird_list[i].y < -self.bird_tolerance):
+                        del self.bird_list[i]
+                        del self.bird_move_list[i]
+                        continue
+                self.bird_move_list[i] = 0
+            i += 1
         
         # 기본 동작 제어 시간
         action_dt = int(now - self.start_time)
         
         # Item 제어 시간
-        ghost_dt = 0
-        undying_dt = 0
         # Ghost
         if self.is_ghost:
-            ghost_dt = int(now - self.ghost_start_time)
+            self.ghost_dt = int(now - self.ghost_start_time)
         
         # Undying
         if self.is_undying:
-            undying_dt = int(now - self.undying_start_time)
+            self.undying_dt = int(now - self.undying_start_time)
         
-        if ghost_dt == App.GHOST_TIME:
+        if self.ghost_dt == App.GHOST_TIME:
             self.is_ghost = False
-        if undying_dt == App.UNDYING_TIME:
+        if self.undying_dt == App.UNDYING_TIME:
             self.is_undying = False
         
         ## POOP 관련
@@ -203,6 +310,34 @@ class App:
             self.is_item_time = True
         elif action_dt % App.ITEM_TIME != 0:
             self.is_item_time = False     
+            
+        # 새 추가    
+        if not self.is_bird_time and action_dt % App.BIRD_TIME == 0: # 10초일 때 한 번 동작
+            # Level check
+            if self.total_score < 10:
+                self.bird_level = 0
+            elif self.total_score < 50:
+                self.bird_level = 1
+            elif self.total_score < 100:
+                self.bird_level = 2
+            elif self.total_score < 300:
+                self.bird_level = 3
+            else:
+                self.bird_level = 4
+            
+            if action_dt != 0:
+                # Score 올림
+                self.drop_bird()
+            self.is_bird_time = True
+        elif action_dt % App.BIRD_TIME != 0:
+            self.is_bird_time = False 
+         
+     
+    def drop_bird(self):
+        for i in range(self.bird_num[self.bird_level]):
+            self.bird_list.append(Bird(self.bird_level, self.bird_speed[self.bird_level]))
+            self.bird_move_list.append(0)
+            
         
     
     def drop_item(self): 
@@ -218,6 +353,11 @@ class App:
         # Poop
         self.poop_list.clear()
         self.poop_cool_list.clear()
+        
+        # Bird
+        self.bird_list.clear()
+        self.bird_move_list.clear()
+        
     
     def check_collisions(self, x, y):
         center_x,center_y = self.calc_pos(x,y)
@@ -225,7 +365,7 @@ class App:
         for i in range(len(self.poop_list) - len(self.poop_cool_list)):
             # if center_x == self.poop_list[i].x and center_y == self.poop_list[i].y: # 중심 좌표로 판별
 
-            if self.is_hit_box("poop", (self.poop_list[i].x, self.poop_list[i].y), (x,y)): # 거리에 따른 히트박스 판별
+            if self.is_hit_box("obstacle", (self.poop_list[i].x, self.poop_list[i].y), (x,y)): # 거리에 따른 히트박스 판별
                 # 유령 : 통과
                 # 불사 : 제거 계속
                 
@@ -237,6 +377,21 @@ class App:
                     break
                 
                 self.poop_list.remove(self.poop_list[i])
+                self.human.life_count -= 1
+                return True
+            
+        # 새 확인
+        for i in range(len(self.bird_list)):
+            if self.is_hit_box("obstacle", (self.bird_list[i].x, self.bird_list[i].y), (x,y)):
+                if self.is_undying:
+                    self.total_score += App.REMOVE_SCORE
+                    self.bird_list.remove(self.bird_list[i])
+                    break
+                if self.is_ghost:
+                    break
+                
+                self.bird_list.remove(self.bird_list[i])
+                del self.bird_move_list[i]
                 self.human.life_count -= 1
                 return True
             
@@ -267,7 +422,7 @@ class App:
                 and curr_pos[1] >= target_pos[1] - tolerance and curr_pos[1] <= max_y + tolerance:
                     return True
             
-        elif target == "poop":
+        elif target == "obstacle":
             tolerance = 0.9
             dx = target_pos[0] - curr_pos[0]
             dy = target_pos[1] - curr_pos[1]
@@ -284,8 +439,7 @@ class App:
                     return True
         
         return False
-
-    
+                    
     def move_player(self):
         prev_x = self.human.x
         prev_y = self.human.y
@@ -331,10 +485,16 @@ class App:
     
     def drop_poop(self): 
         # 각 칸에 똥싸게 하기 위함, 좌표 // 32
-        x, y = self.calc_pos(self.human.x, self.human.y)
-        self.poop_list.append(Poop(x,y))
-        # 쿨 타임 : 똥을 싸는 즉시 밟는 것을 막기 위함
-        self.poop_cool_list.append(self.poop_list[0])
+        x, y = self.calc_pos(self.human.x+16, self.human.y+16)
+        is_exist = False
+        for poop in self.poop_list:
+            if poop.x == x and poop.y == y:
+                is_exist = True
+                break
+        if not is_exist:
+            self.poop_list.append(Poop(x,y))
+            # 쿨 타임 : 똥을 싸는 즉시 밟는 것을 막기 위함
+            self.poop_cool_list.append(self.poop_list[0])
               
         
     def ability_bar_draw(self):
@@ -427,7 +587,7 @@ class App:
         
         if pyxel.btn(pyxel.KEY_RETURN):
             self.is_press_enter = True
-            time.sleep(0.1)
+            time.sleep(0.2)
         
     def get_user_name(self):
         start_x = 400
@@ -483,8 +643,10 @@ class App:
             
             
         if pyxel.btn(pyxel.KEY_RETURN):
+            time.sleep(0.2)
+            self.start_time = time.time()
             self.is_start = True
-          
+                  
     def end_game(self):
         start_x = 400
         start_y = 300
@@ -560,11 +722,30 @@ class App:
         start_x+=16
         
         if pyxel.btn(pyxel.KEY_RETURN):
-            self.is_game_over = False
-            self.is_start = False
-            self.is_press_enter = False
-            self.user_name.clear()
-            time.sleep(0.1)
+            self.game_init()
+            time.sleep(0.2)
+    
+    def draw_item(self):
+        x = 256*3 + 40
+        y = 520
+        if self.is_ghost:
+            ghost_x = x
+            Item.draw_status(ghost_x, y, "ghost")
+            ghost_x +=32
+            # Number
+            num_string = str(self.GHOST_TIME - self.ghost_dt)
+            for num in num_string:
+                pyxel.blt(ghost_x, y+32, 1, 16 * int(num), 64, 16, 32)
+                ghost_x += 16
+        if self.is_undying:
+            undying_x = x
+            Item.draw_status(undying_x, y+32, "undying")
+            undying_x += 32
+            # Number
+            num_string = str(self.UNDYING_TIME-self.undying_dt)
+            for num in num_string:
+                pyxel.blt(undying_x, y+64, 1, 16 * int(num), 64, 16, 32)
+                undying_x += 16
     
     def draw(self):
         pyxel.cls(0)
@@ -584,7 +765,7 @@ class App:
             pyxel.blt(256*i, 512 +  App.BOX_Y, 
                   2, 0, 128, 
                   256, 128)
-           
+        
         if not self.is_press_enter:
             self.show_press_menu()
         elif not self.is_start: 
@@ -602,10 +783,7 @@ class App:
             
             # level 1
             # draw item
-            if self.is_ghost:
-                Item.draw_status(256*3 + 40, 520, "ghost")
-            if self.is_undying:
-                Item.draw_status(256*3 + 72, 520, "undying")
+            self.draw_item()
             
             # level1
             # Draw poop
@@ -617,6 +795,11 @@ class App:
             # Draw item
             for item in self.item_list:
                 item.draw()
+                
+            # level 3
+            # Draw bird
+            for bird in self.bird_list:
+                bird.draw()
         
         
         

@@ -12,6 +12,7 @@ Use PyxelEditor
 
 ## **Condition**
 Python 에서 pyxel import 해서 게임 만들기
+
 0. **시작화면 설정**
    - [x] “Press “Enter” to start the game” 메세지 보여주기
    - [x] “What is your name?” 후 이름 받아오기
@@ -35,10 +36,11 @@ Python 에서 pyxel import 해서 게임 만들기
    - [x] 투명(무적)
 
 5. **방해물**
-   - [ ] 랜덤하게 등장하는 새
-   - [ ] 랜덤한 방향으로 맵을 지나감
-   - [ ] 처음엔 천천히 지나가지만 점점 빨리 지나가도록
-   - [ ] 새와 캐릭터가 부딛히면 life count 1 감소
+   - [x] 랜덤하게 등장하는 새
+   - [x] 랜덤한 방향으로 맵을 지나감
+   - [x] 처음엔 천천히 지나가지만 점점 빨리 지나가도록
+   - [x] 새와 캐릭터가 부딛히면 life count 1 감소
+   - [X] 특별 동작: 사람 따라오는 갈매기
 
 6. **게임종료**
    - [x] “Game Over”, and display “(name) scored (score)!!”
